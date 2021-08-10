@@ -312,7 +312,16 @@ class ImageLogger(Callback):
     def on_validation_batch_end(self, trainer, pl_module, outputs, batch, batch_idx, dataloader_idx):
         self.log_img(pl_module, batch, batch_idx, split="val")
 
+class CheckpointEveryEpoch(pl.Callback):
+    def __init__(self, ckptdir,):
+        self.ckptdir = ckptdir
 
+    def on_epoch_end(self, trainer: pl.Trainer, _):
+        """ Check if we should save a checkpoint after every train epoch """
+        epoch = trainer.current_epoch
+        ckpt_file = f"checkpoint_e{epoch06}.ckpt"
+        ckpt_path = os.path.join(self.ckptdir, ckpt_file)
+        trainer.save_checkpoint(ckpt_path)
 
 if __name__ == "__main__":
     # custom parser to specify config files, train, test and debug mode,
@@ -466,22 +475,22 @@ if __name__ == "__main__":
 
         # modelcheckpoint - use TrainResult/EvalResult(checkpoint_on=metric) to
         # specify which metric is used to determine best models
-        default_modelckpt_cfg = {
-            "target": "pytorch_lightning.callbacks.ModelCheckpoint",
-            "params": {
-                "dirpath": ckptdir,
-                "filename": "{epoch:06}",
-                "verbose": True,
-                "save_last": True,
-            }
-        }
-        if hasattr(model, "monitor"):
-            print(f"Monitoring {model.monitor} as checkpoint metric.")
-            default_modelckpt_cfg["params"]["monitor"] = model.monitor
-            default_modelckpt_cfg["params"]["save_top_k"] = 3
+#         default_modelckpt_cfg = {
+#             "target": "pytorch_lightning.callbacks.ModelCheckpoint",
+#             "params": {
+#                 "dirpath": ckptdir,
+#                 "filename": "{epoch:06}",
+#                 "verbose": True,
+#                 "save_last": True,
+#             }
+#         }
+#         if hasattr(model, "monitor"):
+#             print(f"Monitoring {model.monitor} as checkpoint metric.")
+#             default_modelckpt_cfg["params"]["monitor"] = model.monitor
+#             default_modelckpt_cfg["params"]["save_top_k"] = 3
 
-        modelckpt_cfg = OmegaConf.create()
-        modelckpt_cfg = OmegaConf.merge(default_modelckpt_cfg, modelckpt_cfg)
+#         modelckpt_cfg = OmegaConf.create()
+#         modelckpt_cfg = OmegaConf.merge(default_modelckpt_cfg, modelckpt_cfg)
         # trainer_kwargs["checkpoint_callback"] = instantiate_from_config(modelckpt_cfg)
 
         # add callback which sets up log directory
@@ -511,6 +520,12 @@ if __name__ == "__main__":
                 "params": {
                     "logging_interval": "step",
                     #"log_momentum": True
+                }
+            },
+            "checkpoint_every_epoch": {
+                "target": "main.CheckpointEveryEpoch",
+                "params": {
+                    "ckptdir": ckptdir,
                 }
             },
         }
