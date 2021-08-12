@@ -266,10 +266,9 @@ class ImageLogger(Callback):
             os.makedirs(os.path.split(path)[0], exist_ok=True)
             Image.fromarray(grid).save(path)
             
-        if split == "train":
+        if split == "train" and batch_idx % self.batch_freq == 0:
             ckpt_root = os.path.join(save_dir, "checkpoints")
-            ckpt_filename = "{}_gs-{:06}_e-{:06}_b-{:06}.ckpt".format(
-                k,
+            ckpt_filename = "checkpoint_gs-{:06}_e-{:06}_b-{:06}.ckpt".format(
                 global_step,
                 current_epoch,
                 batch_idx)
