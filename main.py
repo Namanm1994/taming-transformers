@@ -248,7 +248,7 @@ class ImageLogger(Callback):
 
     @rank_zero_only
     def log_local(self, save_dir, split, images,
-                  global_step, current_epoch, batch_idx):
+                  global_step, current_epoch, batch_idx, trainer):
         root = os.path.join(save_dir, "images", split)
         for k in images:
             grid = torchvision.utils.make_grid(images[k], nrow=4)
@@ -265,8 +265,19 @@ class ImageLogger(Callback):
             path = os.path.join(root, filename)
             os.makedirs(os.path.split(path)[0], exist_ok=True)
             Image.fromarray(grid).save(path)
+            
+        if split == "train":
+            ckpt_root = os.path.join(save_dir, "checkpoints")
+            ckpt_filename = "{}_gs-{:06}_e-{:06}_b-{:06}.ckpt".format(
+                k,
+                global_step,
+                current_epoch,
+                batch_idx)
+            ckpt_path = os.path.join(ckpt_root, ckpt_filename)
+            print("\nSaving checkpoint", ckpt_path)
+            trainer.save_checkpoint(ckpt_path)
 
-    def log_img(self, pl_module, batch, batch_idx, split="train"):
+    def log_img(self, pl_module, batch, batch_idx, trainer, split="train"):
         if (self.check_frequency(batch_idx) and  # batch_idx % self.batch_freq == 0
                 hasattr(pl_module, "log_images") and
                 callable(pl_module.log_images) and
@@ -289,7 +300,7 @@ class ImageLogger(Callback):
                         images[k] = torch.clamp(images[k], -1., 1.)
 
             self.log_local(pl_module.logger.save_dir, split, images,
-                           pl_module.global_step, pl_module.current_epoch, batch_idx)
+                           pl_module.global_step, pl_module.current_epoch, batch_idx, trainer)
 
             logger_log_images = self.logger_log_images.get(logger, lambda *args, **kwargs: None)
             logger_log_images(pl_module, images, pl_module.global_step, split)
@@ -307,21 +318,21 @@ class ImageLogger(Callback):
         return False
 
     def on_train_batch_end(self, trainer, pl_module, outputs, batch, batch_idx, dataloader_idx):
-        self.log_img(pl_module, batch, batch_idx, split="train")
+        self.log_img(pl_module, batch, batch_idx, trainer, split="train")
 
     def on_validation_batch_end(self, trainer, pl_module, outputs, batch, batch_idx, dataloader_idx):
-        self.log_img(pl_module, batch, batch_idx, split="val")
+        self.log_img(pl_module, batch, batch_idx, trainer, split="val")
 
-class CheckpointEveryEpoch(pl.Callback):
-    def __init__(self, ckptdir,):
-        self.ckptdir = ckptdir
+# class CheckpointEveryEpoch(pl.Callback):
+#     def __init__(self, ckptdir,):
+#         self.ckptdir = ckptdir
 
-    def on_epoch_end(self, trainer: pl.Trainer, _):
-        """ Check if we should save a checkpoint after every train epoch """
-        epoch = trainer.current_epoch
-        ckpt_file = f"checkpoint_e{epoch06}.ckpt"
-        ckpt_path = os.path.join(self.ckptdir, ckpt_file)
-        trainer.save_checkpoint(ckpt_path)
+#     def on_epoch_end(self, trainer: pl.Trainer, _):
+#         """ Check if we should save a checkpoint after every train epoch """
+#         epoch = trainer.current_epoch
+#         ckpt_file = f"checkpoint_e{epoch}.ckpt"
+#         ckpt_path = os.path.join(self.ckptdir, ckpt_file)
+#         trainer.save_checkpoint(ckpt_path)
 
 if __name__ == "__main__":
     # custom parser to specify config files, train, test and debug mode,
@@ -510,7 +521,7 @@ if __name__ == "__main__":
             "image_logger": {
                 "target": "main.ImageLogger",
                 "params": {
-                    "batch_frequency": 750,
+                    "batch_frequency": 1000,
                     "max_images": 4,
                     "clamp": True
                 }
@@ -522,12 +533,12 @@ if __name__ == "__main__":
                     #"log_momentum": True
                 }
             },
-            "checkpoint_every_epoch": {
-                "target": "main.CheckpointEveryEpoch",
-                "params": {
-                    "ckptdir": ckptdir,
-                }
-            },
+#             "checkpoint_every_epoch": {
+#                 "target": "main.CheckpointEveryEpoch",
+#                 "params": {
+#                     "ckptdir": ckptdir,
+#                 }
+#             },
         }
         callbacks_cfg = OmegaConf.create()
         callbacks_cfg = OmegaConf.merge(default_callbacks_cfg, callbacks_cfg)
