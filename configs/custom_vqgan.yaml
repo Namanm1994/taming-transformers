@@ -35,9 +35,11 @@ data:
       params:
         training_images_list_file: /content/test.txt
         size: 256
+        watermark: /content/watermark.png
     validation:
       target: taming.data.custom.CustomTest
       params:
         test_images_list_file: /content/train.txt
         size: 256
+        watermark: /content/watermark.png
 
