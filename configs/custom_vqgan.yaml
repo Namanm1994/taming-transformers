@@ -38,6 +38,6 @@ data:
     validation:
       target: taming.data.custom.CustomTest
       params:
-        test_images_list_file: /content/test.txt
+        test_images_list_file: /content/train.txt
         size: 256
 
