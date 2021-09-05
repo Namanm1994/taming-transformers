@@ -21,13 +21,14 @@ class ConcatDatasetWithIndex(ConcatDataset):
 
 
 class ImagePaths(Dataset):
-    def __init__(self, paths, size=None, random_crop=False, labels=None):
+    def __init__(self, paths, size=None, random_crop=False, labels=None, watermark=None):
         self.size = size
         self.random_crop = random_crop
 
         self.labels = dict() if labels is None else labels
         self.labels["file_path_"] = paths
         self._length = len(paths)
+        self.watermark=watermark
 
         if self.size is not None and self.size > 0:
             self.rescaler = albumentations.SmallestMaxSize(max_size = self.size + self.size//16)
@@ -48,7 +49,19 @@ class ImagePaths(Dataset):
             image = image.convert("RGB")
         image = np.array(image).astype(np.uint8)
         image = self.preprocessor(image=image)["image"]
-        image = (image/127.5 - 1.0).astype(np.float32)
+        image = np.array(image).astype(np.float32)
+
+        if self.watermark is not None:
+            alpha = Image.open(self.watermark)
+            if not alpha.mode == "RGB":
+                alpha = alpha.convert("RGB")
+            alpha = np.array(alpha, dtype=np.float32)
+            alpha = 1.0 * alpha / 255.0
+            gray = np.full(image.shape, 128, dtype=np.float32)
+            image = image * (1.0 - alpha) + gray * alpha
+            image = np.round(np.clip(image, 0, 255))
+
+        image = (image/127.5 - 1.0)
         return image
 
     def __getitem__(self, i):
