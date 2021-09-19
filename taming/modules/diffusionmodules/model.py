@@ -290,7 +290,7 @@ class Model(nn.Module):
                                         out_ch,
                                         kernel_size=3,
                                         stride=1,
-                                        padding=1)
+                                        padding=1)*1000.0
         self.output = torch.nn.Conv2d(3, 1, kernel_size=256)
         self.output.weight.requires_grad = False
         torch.nn.init.constant_(self.output.weight, 1)
@@ -505,7 +505,7 @@ class Decoder(nn.Module):
                                         out_ch,
                                         kernel_size=3,
                                         stride=1,
-                                        padding=1)
+                                        padding=1)*1000.0
         self.output = torch.nn.Conv2d(3, 1, kernel_size=256)
         self.output.weight.requires_grad = False
         torch.nn.init.constant_(self.output.weight, 1)
