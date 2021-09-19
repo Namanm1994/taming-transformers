@@ -290,6 +290,9 @@ class Model(nn.Module):
                                         kernel_size=3,
                                         stride=1,
                                         padding=1)
+        self.output = torch.nn.Conv2d(3, 1, kernel_size=256)
+        self.output.weight.requires_grad = False
+        torch.nn.init.constant_(self.output.weight, 1)
 
     def forward(self, x, t=None):
         #assert x.shape[2] == x.shape[3] == self.resolution
@@ -335,6 +338,7 @@ class Model(nn.Module):
         h = self.norm_out(h)
         h = nonlinearity(h)
         h = self.conv_out(h)
+        h = torch.mul(h, self.output.weight)
         return h
 
 
@@ -501,6 +505,9 @@ class Decoder(nn.Module):
                                         kernel_size=3,
                                         stride=1,
                                         padding=1)
+        self.output = torch.nn.Conv2d(3, 1, kernel_size=256)
+        self.output.weight.requires_grad = False
+        torch.nn.init.constant_(self.output.weight, 1)
         
     def forward(self, z):
         #assert z.shape[1:] == self.z_shape[1:]
@@ -533,6 +540,7 @@ class Decoder(nn.Module):
         h = self.norm_out(h)
         h = nonlinearity(h)
         h = self.conv_out(h)
+        h = torch.mul(h, self.output.weight)
         return h
 
 
@@ -772,4 +780,3 @@ class UpsampleDecoder(nn.Module):
         h = nonlinearity(h)
         h = self.conv_out(h)
         return h
-
