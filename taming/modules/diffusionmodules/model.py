@@ -3,6 +3,7 @@ import math
 import torch
 import torch.nn as nn
 import numpy as np
+import torch.nn.functional as F
 
 
 def get_timestep_embedding(timesteps, embedding_dim):
@@ -338,7 +339,7 @@ class Model(nn.Module):
         h = self.norm_out(h)
         h = nonlinearity(h)
         h = self.conv_out(h)
-        h = torch.mul(h, self.output.weight)
+        h = torch.mul(h, F.interpolate(self.output.weight, h.shape[-2:]))
         return h
 
 
@@ -540,7 +541,7 @@ class Decoder(nn.Module):
         h = self.norm_out(h)
         h = nonlinearity(h)
         h = self.conv_out(h)
-        h = torch.mul(h, self.output.weight)
+        h = torch.mul(h, F.interpolate(self.output.weight, h.shape[-2:]))
         return h
 
 
