@@ -341,7 +341,8 @@ class Model(nn.Module):
         if self.conv_out.weight[0, 0, 0, 0] < 0.01:
             self.conv_out.weight *= 1000.0
         h = self.conv_out(h)
-        h = torch.mul(h, F.interpolate(self.output.weight, h.shape[-2:]))
+        h1 = F.interpolate(self.output.weight, h.shape[-2:]).mul(0.25).add(0.75)
+        h = torch.mul(h, h1)
         return h
 
 
@@ -545,7 +546,8 @@ class Decoder(nn.Module):
         if self.conv_out.weight[0, 0, 0, 0] < 0.01:
             self.conv_out.weight *= 1000.0
         h = self.conv_out(h)
-        h = torch.mul(h, F.interpolate(self.output.weight, h.shape[-2:]))
+        h1 = F.interpolate(self.output.weight, h.shape[-2:]).mul(0.25).add(0.75)
+        h = torch.mul(h, h1)
         return h
 
 
