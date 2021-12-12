@@ -37,7 +37,7 @@ class ImagePaths(Dataset):
             else:
                 self.cropper = albumentations.RandomCrop(height=self.size//2,width=self.size//2)
             self.flipper = albumentations.HorizontalFlip()
-            elf.preprocessor = albumentations.Compose([self.cropper, self.flipper])
+            self.preprocessor = albumentations.Compose([self.cropper, self.flipper])
 #             self.preprocessor = albumentations.Compose([self.rescaler, self.cropper, self.flipper])
         else:
             self.preprocessor = lambda **kwargs: kwargs
