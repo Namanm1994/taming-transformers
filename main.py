@@ -563,6 +563,7 @@ if __name__ == "__main__":
         bs, base_lr = config.data.params.batch_size, config.model.base_learning_rate
         if not cpu:
             print("lightning_config.trainer.gpus: ", lightning_config.trainer.gpus)
+            print(" type lightning_config.trainer.gpus: ", type(lightning_config.trainer.gpus), "\n")
             ngpu = len(lightning_config.trainer.gpus.strip(",").split(','))
         else:
             ngpu = 1
