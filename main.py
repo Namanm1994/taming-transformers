@@ -423,9 +423,9 @@ if __name__ == "__main__":
         else:
             name = ""
         nowname = now+name+opt.postfix
-        logdir = os.path.join(opt.default_root_dir, nowname)
+        logdir = os.path.join("logs", nowname)
         
-    print("logdir", opt.default_root_dir)
+    print("opt.default_root_dir: ", logdir)
     ckptdir = os.path.join(logdir, "checkpoints")
     cfgdir = os.path.join(logdir, "configs")
     seed_everything(opt.seed)
