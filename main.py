@@ -386,6 +386,9 @@ if __name__ == "__main__":
     parser = Trainer.add_argparse_args(parser)
 
     opt, unknown = parser.parse_known_args()
+    print("type(opt): ", type(opt))
+    print("opt: ", opt)
+    print("default_root_dir: ", opt.default_root_dir)
     if opt.name and opt.resume:
         raise ValueError(
             "-n/--name and -r/--resume cannot be specified both."
