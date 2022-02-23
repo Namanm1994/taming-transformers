@@ -566,7 +566,7 @@ if __name__ == "__main__":
             print("type lightning_config.trainer.gpus: ", type(lightning_config.trainer.gpus), "\n")
             print("len(lightning_config.trainer.gpus.strip(",").split(',')): ",\
                   len(str(lightning_config.trainer.gpus).strip(",").split(',')), "\n")
-            ngpu = len(lightning_config.trainer.gpus.strip(",").split(','))
+            ngpu = len(str(lightning_config.trainer.gpus).strip(",").split(','))
         else:
             ngpu = 1
         accumulate_grad_batches = 1 # lightning_config.trainer.accumulate_grad_batches or 1
