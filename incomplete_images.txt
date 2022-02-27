@@ -1,4 +1,4 @@
-['lyubov-popova_still-life-with-instruments-1916.jpg',
+{"images" : ['lyubov-popova_still-life-with-instruments-1916.jpg',
  'herbert-james-draper_calypso-island.jpg',
  'kazimir-malevich_suprematistic-composition-combined-feeling-circle-and-square-1927.jpg',
  'maria-fortuny_un-cuerpo-en-la-calle.jpg',
@@ -396,4 +396,4 @@
  'henri-matisse_nude-in-front-of-a-red-background-1923.jpg',
  'alexander-rodchenko_reklama-galosh-1923.jpg',
  'alexander-khvostenko-khvostov_poster-1920.jpg',
- 'henri-matisse_large-cliff-two-rays-1920.jpg']
+ 'henri-matisse_large-cliff-two-rays-1920.jpg']}
