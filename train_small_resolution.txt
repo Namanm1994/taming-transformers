@@ -1,4 +1,4 @@
-['victor-hugo_lace-impression-spectral-form-1855.jpg',
+{"images" : ['victor-hugo_lace-impression-spectral-form-1855.jpg',
  'john-ruskin_under-transept-gallery-1848.jpg',
  'emily-carr_tree-trunk-1932.jpg',
  'guanxiu_the-4th-panthaka-arhat.jpg',
@@ -141,4 +141,4 @@
  'alexey-bogolyubov_steamship-kolkhida-fighting-the-turkish-boats-at-the-st-nicholas-fort-near-poti-georgia-during-1854.jpg',
  'amadeo-de-souza-cardoso_painting-deployment-intersection-1914.jpg',
  'jules-cheret_arlette-dorg-re-1890.jpg',
- 'han-gan_portrait-of-emperor-xuanzong.jpg']
+ 'han-gan_portrait-of-emperor-xuanzong.jpg']}
