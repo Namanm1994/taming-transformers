@@ -1,4 +1,4 @@
-['xu-beihong_an-eagle-1941.jpg',
+{"images" : ['xu-beihong_an-eagle-1941.jpg',
  'xu-beihong_horse-master-jiu-fang-gao-1931.jpg',
  'andre-masson_portrait-of-roland-tual.jpg',
  'cuno-amiet_fruit-harvest-female-figure-with-basket-1914.jpg',
@@ -19,4 +19,4 @@
  'xu-beihong_magpies-on-a-tree-branch-1946.jpg',
  'xu-beihong_himalayan-forest.jpg',
  'max-pechstein_fishing-boats-in-the-afternoon-sun-fischkutter-in-nachmittagssonne-1921.jpg',
- 'cuno-amiet_portrait-d-alberto-1910.jpg']
+ 'cuno-amiet_portrait-d-alberto-1910.jpg']}
