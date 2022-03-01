@@ -410,6 +410,7 @@ if __name__ == "__main__":
 
         opt.resume_from_checkpoint = ckpt
         base_configs = sorted(glob.glob(os.path.join(logdir, "configs/*.yaml")))
+        print("base_configs : ", base_configs)
         opt.base = base_configs+opt.base
         _tmp = logdir.split("/")
         nowname = _tmp[_tmp.index("logs")+1]
