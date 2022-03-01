@@ -46,10 +46,10 @@ class ImagePaths(Dataset):
         return self._length
 
     def preprocess_image(self, image_path):
+        print("image_path : ", image_path)
         image = Image.open(image_path)
         if not image.mode == "RGB":
             image = image.convert("RGB")
-        print(type(image))
         image = np.array(image).astype(np.uint8)
         image = self.preprocessor(image=image)["image"]
         image = np.array(image).astype(np.float32)
